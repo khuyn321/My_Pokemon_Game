@@ -1,0 +1,24 @@
+Tiled is a free, popular map editor for tile-based games. It allows you to paint with tiles like Photoshop, but on a grid.
+
+You can:
+    - Create ground, details, foreground, collision
+    - Make object Layers for spawn points, doors, more precise collisions, etc.
+
+The game I'm making uses Tiled through:
+    - Loading the tileset images
+    - Loading the JSON / TMX(XML) data
+    - For each layer, then cell: Computing the source rectangle in the tileset, then drawing it (context.drawImage(...))
+    - Builds a collision grid from the collision layer and check it when moving the player
+
+  Tileset vs. Tilemap:
+
+  ___Tileset___
+    - A collection of graphical tiles (smaller image pieces used to build the maps)
+      💡 Think: One big graph paper sticker sheet with each square being 32 x 32 px each
+
+  ___Tilemap___
+    - a 2D sizeable array of numbers (IDs) that say which tile goes in each cell
+    - Looks something like this:
+    [ 0,0,0,1,1
+      0,2,2,1,1
+      0,0,3,3,3 ]

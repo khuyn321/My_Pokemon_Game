@@ -1,5 +1,16 @@
 const canvas = document.querySelector('canvas')
+/*  document.querySelector() - "Find me the first element on the html page that matches this description"
+
+   💡 Use querySelectorAll when you want to change the CSS for many matches
+     Returns null if none found for both
+*/
+
 const context = canvas.getContext('2d')
+/*  <Canvas> - A blank drawing surface element
+
+    💡 The context here, '2d', is like the pen to this drawing canvas!
+
+*/
 
 canvas.width = 1024
 canvas.height = 576
@@ -18,6 +29,12 @@ let playerImageX = -785
 
 function animate() { //movement animation loop function
   window.requestAnimationFrame(animate) //infinite loop
+  /*  window -  The browser's global object (tons of web APIs live on it)
+
+      💡Tons of methods for this that can requent animation frames, local storage, set timeout, etc.
+
+      requestAnimationFrame - Asks the browser to animate the next frame, then calls the callback function (the parameter)
+  */
 
   context.drawImage(image, -1315, -580)
   context.drawImage(
@@ -41,6 +58,12 @@ function animate() { //movement animation loop function
 animate()
 
 window.addEventListener('keydown', (e) => {
+  /*  addEventListener(type, handler, options?)  -  Subscribes to user events (keyboard, mouse, touch, resize, etc.)
+  
+      💡 You might see options like { once: true }, { passive: true }, or { capture: true }
+  */
+
+
   // console.log(e.key)
   switch (e.key) {
     case 'w':
