@@ -24,8 +24,40 @@ image.src = 'Game_Resources/My_Game_Assets/My_Pokemon_Game_Map.png'
 const playerImage = new Image()
 playerImage.src = 'Game_Resources/Character_Movement/playerDown.png'
 
-let backgroundImageX = -785
-let playerImageX = -785
+
+class Sprite {
+  constructor({ position, velocity, image }) {
+    this.position = position
+    this.image = image
+  }
+
+  draw() {
+    context.drawImage(this.image, this.position.x, this.position.y)
+  }
+}
+
+const background = new Sprite({
+  position: { x: -1315, y: -580 },
+  image: image
+})
+
+// let backgroundImageX = -1315
+// let playerImageX = -580
+
+const keys = {
+  w: {
+    pressed: false
+  },
+  a: {
+    pressed: false
+  },
+  s: {
+    pressed: false
+  },
+  d: {
+    pressed: false
+  }
+}
 
 function animate() { //movement animation loop function
   window.requestAnimationFrame(animate) //infinite loop
@@ -35,8 +67,7 @@ function animate() { //movement animation loop function
 
       requestAnimationFrame - Asks the browser to animate the next frame, then calls the callback function (the parameter)
   */
-
-  context.drawImage(image, -1315, -580)
+  background.draw()
   context.drawImage(
     playerImage,
 
@@ -54,29 +85,58 @@ function animate() { //movement animation loop function
     playerImage.width / 4, // crop width: 1/4 of the 4 clones
     playerImage.height,
   )
+
+  if (keys.w.pressed && lastKey === 'w') background.position.y += 3
+  else if (keys.a.pressed && lastKey === 'a') background.position.x += 3
+  else if (keys.s.pressed && lastKey === 's') background.position.y -= 3
+  else if (keys.d.pressed && lastKey === 'd') background.position.x -= 3
 }
 animate()
+let lastKey = ''
+// So that if two keys are pressed at once, the last one takes priority
 
 window.addEventListener('keydown', (e) => {
   /*  addEventListener(type, handler, options?)  -  Subscribes to user events (keyboard, mouse, touch, resize, etc.)
-  
+
       💡 You might see options like { once: true }, { passive: true }, or { capture: true }
   */
-
 
   // console.log(e.key)
   switch (e.key) {
     case 'w':
-      console.log('pressed w key')
+      keys.w.pressed = true
+      lastKey = 'w'
       break
     case 'a':
-      console.log('pressed a key')
+      keys.a.pressed = true
+      lastKey = 'a'
       break
     case 's':
-      console.log('pressed s key')
+      keys.s.pressed = true
+      lastKey = 's'
       break
     case 'd':
-      console.log('pressed d key')
+      keys.d.pressed = true
+      lastKey = 'd'
       break
   }
+  // console.log(keys)
+})
+
+window.addEventListener('keyup', (e) => {
+  switch (e.key) {
+    case 'w':
+      keys.w.pressed = false
+      break
+    case 'a':
+      keys.a.pressed = false
+      break
+    case 's':
+      keys.s.pressed = false
+      break
+    case 'd':
+      keys.d.pressed = false
+      break
+  }
+  // console.log(keys)
 })
