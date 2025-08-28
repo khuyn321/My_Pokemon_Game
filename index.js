@@ -22,6 +22,9 @@ for (let i = 0; i < collisionsArr.length; i += 70) {
 }
 
 class Boundary {
+  static width = 48
+  static height = 48
+
   constructor({ position }) {
     this.position = position
     this.width = 48
@@ -35,6 +38,7 @@ class Boundary {
 }
 
 const boundaries = []
+
 const offset = {
   x: -1315,
   y: -580
@@ -43,6 +47,7 @@ const offset = {
 collisionsMap.forEach((row, i) => {
   row.forEach((symbol, j) => {
     if (symbol === 1025) {
+      console.log(symbol)
       boundaries.push(
         new Boundary({
           position: {
@@ -54,7 +59,7 @@ collisionsMap.forEach((row, i) => {
     }
   })
 })
-console.log(collisionsMap)
+console.log(boundaries)
 
 const image = new Image()
 image.src = 'Game_Resources/My_Game_Assets/My_Pokemon_Game_Map.png'
@@ -100,6 +105,13 @@ const keys = {
   }
 }
 
+const testBoundary = new Boundary({
+  position: {
+    x: 400,
+    y: 400
+  }
+})
+
 function animate() { //movement animation loop function
   window.requestAnimationFrame(animate) //infinite loop
   /*  window -  The browser's global object (tons of web APIs live on it)
@@ -109,9 +121,12 @@ function animate() { //movement animation loop function
       requestAnimationFrame - Asks the browser to animate the next frame, then calls the callback function (the parameter)
   */
   background.draw()
-  boundaries.forEach((boundary) => {
-    boundary.draw() //draws out a red rectangle
-  })
+  // boundaries.forEach((boundary) => {
+  // boundary.draw() //draws out a red rectangle
+  // })
+  testBoundary.draw()
+
+  const movables = [background, testBoundary]
   context.drawImage(
     playerImage,
 
@@ -130,10 +145,26 @@ function animate() { //movement animation loop function
     playerImage.height,
   )
 
-  if (keys.w.pressed && lastKey === 'w') background.position.y += 3
-  else if (keys.a.pressed && lastKey === 'a') background.position.x += 3
-  else if (keys.s.pressed && lastKey === 's') background.position.y -= 3
-  else if (keys.d.pressed && lastKey === 'd') background.position.x -= 3
+  if (keys.w.pressed && lastKey === 'w') {
+    movables.forEach((movable) => {
+      movable.position.y += 3
+    })
+  }
+  else if (keys.a.pressed && lastKey === 'a') {
+    movables.forEach((movable) => {
+      movable.position.x += 3
+    })
+  }
+  else if (keys.s.pressed && lastKey === 's') {
+    movables.forEach((movable) => {
+      movable.position.y -= 3
+    })
+  }
+  else if (keys.d.pressed && lastKey === 'd') {
+    movables.forEach((movable) => {
+      movable.position.x -= 3
+    })
+  }
 }
 animate()
 let lastKey = ''
