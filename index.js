@@ -69,15 +69,47 @@ playerImage.src = 'Game_Resources/Character_Movement/playerDown.png'
 
 
 class Sprite {
-  constructor({ position, velocity, image }) {
+  constructor({ position, velocity, image, frames = { max: 1 } }) {
     this.position = position
     this.image = image
+    this.frames = frames
   }
 
   draw() {
-    context.drawImage(this.image, this.position.x, this.position.y)
+    context.drawImage(
+      this.image,
+
+
+      //----- cropped -----
+      0, // x-coord that we want to begin cropping from (top left)
+      0, // y-coord that we want to begin cropping from (top left)
+      this.image.width / this.frames.max, // crop width: 1/4 of the 4 clones
+      this.image.height,
+      this.position.x, // where to place the cropped image (top left)
+      this.position.y, // where to place the cropped image (top left)
+
+
+      //----- actual -----
+      this.image.width / this.frames.max, // crop width: 1/4 of the 4 clones
+      this.image.height,
+    )
   }
 }
+
+/*
+
+*/
+
+const player = new Sprite({
+  position: {
+    x: (canvas.width / 2) - ((192 / 4) / 2),
+    y: (canvas.height / 2) - (68 / 2)
+  },
+  image: playerImage,
+  frames: {
+    max: 4
+  }
+})
 
 const background = new Sprite({
   position: {
@@ -112,6 +144,7 @@ const testBoundary = new Boundary({
   }
 })
 
+const movables = [background, testBoundary]
 function animate() { //movement animation loop function
   window.requestAnimationFrame(animate) //infinite loop
   /*  window -  The browser's global object (tons of web APIs live on it)
@@ -125,25 +158,9 @@ function animate() { //movement animation loop function
   // boundary.draw() //draws out a red rectangle
   // })
   testBoundary.draw()
+  player.draw()
 
-  const movables = [background, testBoundary]
-  context.drawImage(
-    playerImage,
-
-
-    //----- cropped -----
-    0, // x-coord that we want to begin cropping from (top left)
-    0, // y-coord that we want to begin cropping from (top left)
-    playerImage.width / 4, // crop width: 1/4 of the 4 clones
-    playerImage.height,
-
-
-    //----- actual -----
-    (canvas.width / 2) - ((playerImage.width / 4) / 2),
-    (canvas.height / 2) - (playerImage.height / 2),
-    playerImage.width / 4, // crop width: 1/4 of the 4 clones
-    playerImage.height,
-  )
+  // if () FIXME player.position.x + player.i
 
   if (keys.w.pressed && lastKey === 'w') {
     movables.forEach((movable) => {
