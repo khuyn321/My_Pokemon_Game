@@ -9,14 +9,52 @@ const context = canvas.getContext('2d')
 /*  <Canvas> - A blank drawing surface element
 
     💡 The context here, '2d', is like the pen to this drawing canvas!
-
+http://192.168.1.31:5500/My_Game_Assets/data/collisions.js net::ERR_ABORTED 404 (Not Found)
 */
 
 canvas.width = 1024
 canvas.height = 576
 
-context.fillStyle = 'white'
-context.fillRect(0, 0, canvas.width, canvas.height)
+const collisionsMap = []
+
+for (let i = 0; i < collisionsArr.length; i += 70) {
+  collisionsMap.push(collisionsArr.slice(i, 70 + i))
+}
+
+class Boundary {
+  constructor({ position }) {
+    this.position = position
+    this.width = 48
+    this.height = 48
+  }
+
+  draw() {
+    context.fillStyle = 'red'
+    context.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+}
+
+const boundaries = []
+const offset = {
+  x: -1315,
+  y: -580
+}
+
+collisionsMap.forEach((row, i) => {
+  row.forEach((symbol, j) => {
+    if (symbol === 1025) {
+      boundaries.push(
+        new Boundary({
+          position: {
+            x: j * Boundary.width + offset.x,//boundaries.length % 70 * 48,
+            y: i * Boundary.height + offset.y //Math.floor(boundaries.length / 70) * 48
+          }
+        })
+      )
+    }
+  })
+})
+console.log(collisionsMap)
 
 const image = new Image()
 image.src = 'Game_Resources/My_Game_Assets/My_Pokemon_Game_Map.png'
@@ -37,7 +75,10 @@ class Sprite {
 }
 
 const background = new Sprite({
-  position: { x: -1315, y: -580 },
+  position: {
+    x: offset.x,
+    y: offset.y
+  },
   image: image
 })
 
@@ -68,6 +109,9 @@ function animate() { //movement animation loop function
       requestAnimationFrame - Asks the browser to animate the next frame, then calls the callback function (the parameter)
   */
   background.draw()
+  boundaries.forEach((boundary) => {
+    boundary.draw() //draws out a red rectangle
+  })
   context.drawImage(
     playerImage,
 
